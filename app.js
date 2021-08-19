@@ -1,5 +1,7 @@
 const express = require('express');
 const expressLayout = require('express-ejs-layouts')
+const { listContact } = require('./utils/contact.js')
+
 const app = express()
 const port = 3000
 
