@@ -16,24 +16,9 @@ app.use(express.static('public'))
 
 
 app.get('/', (req, res) => {
-    const mahasiswa = [{
-            nim: '6706180041',
-            name: 'Irgi Ahmad M1'
-        },
-        {
-            nim: '6706180041',
-            name: 'Irgi Ahmad M2'
-        },
-        {
-            nim: '6706180041',
-            name: 'Irgi Ahmad M3'
-        }
-    ]
-
     res.render('index', {
         name: 'irgi',
-        title: 'Home',
-        mahasiswa,
+        title: 'Home'
     })
 })
 
@@ -48,8 +33,10 @@ app.get('/about', (req, res) => {
 })
 
 app.get('/contact', (req, res) => {
+    const contacts = listContact()
     res.render('contact', {
         title: 'About',
+        contacts
     })
 })
 
