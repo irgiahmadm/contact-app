@@ -31,5 +31,19 @@ const addContact = (contact) => {
     rewriteContact(contacts)
 }
 
+const deleteContact = (phoneNumber) => {
+    const contacts = listContact()
+    const filteredContacts = contacts.filter((contact) => contact.phoneNumber !== phoneNumber)
+    rewriteContact(filteredContacts)
+}
 
-module.exports = { listContact, findContact, addContact }
+const editContact = (newContact) => {
+    const contacts = listContact()
+    const filteredContacts = contacts.filter((contact) => contact.phoneNumber != newContact.oldPhoneNumber)
+    delete newContact.oldPhoneNumber
+    filteredContacts.push(newContact)
+    rewriteContact(filteredContacts)
+}
+
+
+module.exports = { listContact, findContact, addContact, deleteContact, editContact}

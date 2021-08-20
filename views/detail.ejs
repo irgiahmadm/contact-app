@@ -14,7 +14,9 @@
                             <h5 class="card-title">Nama: <%= contact.name %> </h5>
                             <h6 class="card-subtitle mb-2 text-muted">Phone Number: <%= contact.phoneNumber %> </h6>
                             <p class="card-text">E-mail: <%= contact.email %> </p>
-                            <a href="/contact" class="card-link">&laquo; Contact List</a>
+                            <a href="/contact/edit/<%= contact.phoneNumber %>" class="btn btn-primary badge">Edit</a>
+                            <a href="/contact/delete/<%= contact.phoneNumber %>" class="btn btn-danger badge" onclick="return confirm('yakin?')">Hapus</a>
+                            <a href="/contact" class="card-link d-block mt-3">&laquo; Contact List</a>
                         </div>
                     </div>
                 <% } %>

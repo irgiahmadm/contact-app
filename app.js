@@ -6,7 +6,9 @@ const flash = require('connect-flash')
 const {
     listContact,
     findContact,
-    addContact
+    addContact,
+    deleteContact,
+    editContact
 } = require('./utils/contact.js')
 const {
     body,
@@ -31,13 +33,16 @@ app.use(express.urlencoded({
 //flash message config
 app.use(cookieParser('secret'))
 app.use(session({
-    cookie: {maxAge: 6000},
+    cookie: {
+        maxAge: 6000
+    },
     secret: 'secret',
     resave: true,
     saveUninitialized: true
 }))
 app.use(flash())
 
+//middleware for index
 app.get('/', (req, res) => {
     res.render('index', {
         name: 'irgi',
@@ -93,6 +98,52 @@ app.post('/contact', [
     } else {
         addContact(req.body)
         req.flash('msg', 'Contact is succesfully created!')
+        res.redirect('/contact')
+    }
+})
+
+app.get('/contact/delete/:phoneNumber', (req, res) => {
+    const contact = findContact(req.params.phoneNumber)
+    if (!contact) {
+        res.status(404)
+        res.send('<h1>404</h1>')
+    } else {
+        deleteContact(req.params.phoneNumber)
+        req.flash('msg', 'Contact is succesfully deleted!')
+        res.redirect('/contact')
+    }
+})
+
+//form edit contact
+app.get('/contact/edit/:phoneNumber', (req, res) => {
+    const contact = findContact(req.params.phoneNumber)
+    res.render('edit-contact', {
+        title: 'Edit Contact Form',
+        contact
+    })
+})
+
+app.post('/contact/edit',  [
+    check('email', 'Email is invalid').isEmail(),
+    check('phoneNumber', "Phone Number is Invalid").isMobilePhone('id-ID'),
+    body('phoneNumber').custom((value, { req }) => {
+        const duplicate = findContact(value);
+        if (value !== req.body.oldPhoneNumber && duplicate) {
+            throw new Error('Phone Number is exist')
+        }
+        return true
+    })
+],(req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        res.render('edit-contact', {
+            title: 'Form Edit Data Contact',
+            errors: errors.array(),
+            contact: req.body
+        })
+    } else {
+        editContact(req.body)
+        req.flash('msg', 'Contact is succesfully updated!')
         res.redirect('/contact')
     }
 })
