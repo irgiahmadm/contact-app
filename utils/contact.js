@@ -21,4 +21,15 @@ const findContact = (phoneNumber) => {
     return listContact().find((contact) => contact.phoneNumber === phoneNumber)
 }
 
-module.exports = { listContact, findContact }
+const rewriteContact = (contacts) => {
+    fs.writeFileSync(filePath, JSON.stringify(contacts))
+}
+
+const addContact = (contact) => {
+    const contacts = listContact()
+    contacts.push(contact)
+    rewriteContact(contacts)
+}
+
+
+module.exports = { listContact, findContact, addContact }
