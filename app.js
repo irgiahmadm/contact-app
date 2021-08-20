@@ -1,6 +1,6 @@
 const express = require('express');
 const expressLayout = require('express-ejs-layouts')
-const { listContact } = require('./utils/contact.js')
+const { listContact, findContact } = require('./utils/contact.js')
 
 const app = express()
 const port = 3000
@@ -35,8 +35,17 @@ app.get('/about', (req, res) => {
 app.get('/contact', (req, res) => {
     const contacts = listContact()
     res.render('contact', {
-        title: 'About',
+        title: 'Contact',
         contacts
+    })
+})
+
+app.get('/contact/:phoneNumber', (req, res) => {
+    const contact = findContact(req.params.phoneNumber)
+    res.render('detail', {
+        title: 'Detail Contact',
+        contact,
+        phoneNumber: req.params.phoneNumber
     })
 })
 

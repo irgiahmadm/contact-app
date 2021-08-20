@@ -17,4 +17,8 @@ const listContact = () => {
     return contacts
 }
 
-module.exports = { listContact }
+const findContact = (phoneNumber) => {
+    return listContact().find((contact) => contact.phoneNumber === phoneNumber)
+}
+
+module.exports = { listContact, findContact }
