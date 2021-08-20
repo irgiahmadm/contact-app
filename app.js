@@ -2,7 +2,7 @@ const express = require('express');
 const expressLayout = require('express-ejs-layouts')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
-const flash = require('flash')
+const flash = require('connect-flash')
 const {
     listContact,
     findContact,
@@ -28,6 +28,16 @@ app.use(express.urlencoded({
     extended: true
 }))
 
+//flash message config
+app.use(cookieParser('secret'))
+app.use(session({
+    cookie: {maxAge: 6000},
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}))
+app.use(flash())
+
 app.get('/', (req, res) => {
     res.render('index', {
         name: 'irgi',
@@ -50,7 +60,8 @@ app.get('/contact', (req, res) => {
     const contacts = listContact()
     res.render('contact', {
         title: 'Contact',
-        contacts
+        contacts,
+        msg: req.flash('msg')
     })
 })
 
@@ -81,6 +92,7 @@ app.post('/contact', [
         })
     } else {
         addContact(req.body)
+        req.flash('msg', 'Contact is succesfully created!')
         res.redirect('/contact')
     }
 })
